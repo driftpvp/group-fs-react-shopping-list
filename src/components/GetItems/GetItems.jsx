@@ -1,5 +1,6 @@
 import React, { useState , useEffect } from "react";
 import axios from "axios";
+import './GetItems.css';
 
 function GetItems() {
     let [itemList, setItemList] = useState([]);
@@ -13,7 +14,7 @@ function GetItems() {
             .get('/groceries')
             .then((response) => { // TODO test res
                 console.log(response.date);
-                setItemList(response.data)
+                setItemList(response.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -27,14 +28,17 @@ function GetItems() {
     return (
         <div>
             {itemList.map(item => (
-                <div key={item.name}>
-                    {item.name}
-                    {item.quantity} {item.unit}
+                <div key={item.name} className="item-container">
+                    <div className="item-info">
+                        <p>{item.name}</p>
+                        <p>
+                            {item.quantity} {item.unit}
+                        </p>
+                    </div>
                 </div>
             ))}
         </div>
-
-    )
+    );
 }
 
 export default GetItems;

@@ -17,8 +17,23 @@ router.get('/', (req, res) => {
 });
 
 
-// POST
 
+// POST
+router.post("/", (req, res) => {
+    console.log("POST /groceries");
+    const newGrocery = req.body;
+    const queryText = ` INSERT INTO "items" ("name", "quantity", "unit", "purchased") 
+                        VALUES ($1, $2, $3, $4);`;
+    pool.query(queryText, [newGrocery.name, newGrocery.quantity, newGrocery.unit, false])
+    .then(result => {
+        console.log("Grocery item added");
+        res.sendStatus(201);
+    })
+    .catch(error => {
+        console.log("Error adding new grocery item", error);
+        res.sendStatus(500);
+    });
+});
 
 
 
