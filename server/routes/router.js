@@ -6,7 +6,7 @@ const pool = require('../modules/pool.js');
 
 router.get('/', (req, res) => {
     console.log("In GET request");
-    let queryText = 'SELECT * from "items"';
+    let queryText = 'SELECT * from "items" ORDER BY "name" ASC';
 
     pool.query(queryText).then((result) => {
         res.send(result.rows);
@@ -38,12 +38,73 @@ router.post("/", (req, res) => {
 
 
 // PUT
+router.put('/toggle/:id', (req, res) => {
+    let { id } = req.params;
+    const sqlText = `UPDATE "items" SET "purchased" = NOT "purchased" WHERE "id" = $1;`;
+    pool.query(sqlText, [id])
+        .then((result) => {
+            console.log(`Returned from database`, result);
+            res.sendStatus(201);
+        })
+        .catch((err) => {
+            console.log(`Error updating the database ${sqlText}`, err);
+            res.sendStatus(500)
+        })
+})
 
 
 
+// DELETE
 
-//DELETE
+router.delete("/:id" , (req, res) => {
+    // let { id } = req.params;
+    console.log("DELETE /groceries/:id");
+    const queryText = `DELETE FROM "items" WHERE "id" = $1;`;
+    pool
+      .query(queryText, [req.params.id])
+      .then((response) => {
+        console.log("Grocery items deleted", response);
+        res.sendStatus(200);
+      })
+      .catch((error) => {
+        console.log("Error deleting grocery items", error);
+        res.sendStatus(500);
+      });
+  });
 
+  // PUT - Reset All
+
+  router.put("/reset/", (req, res) => {
+    console.log("PUT /groceries/reset purchased status");
+    const queryText = `UPDATE "items" SET "purchased" = FALSE;`;
+    pool.query(queryText)
+    .then(result => {
+        console.log("Purchased status reset");
+        res.sendStatus(200);
+    })
+    .catch(error => {
+        console.log("Error resetting purchased status", error);
+        res.sendStatus(500);
+      });
+  })
+
+
+  // DELETE - ALL
+
+  router.put("/clear/", (req, res) => {
+    console.log("DELETE /groceries/clear");
+    const queryText = `DELETE FROM "items";`;
+    pool
+      .query(queryText)
+      .then(result => {
+        console.log("Grocery items deleted");
+        res.sendStatus(200);
+      })
+      .catch(error => {
+        console.log("Error deleting grocery items", error);
+        res.sendStatus(500);
+      });
+  });
 
 
 

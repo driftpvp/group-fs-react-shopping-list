@@ -1,39 +1,25 @@
-import React, { useState , useEffect } from "react";
-import axios from "axios";
+
 import './GetItems.css';
 
-function GetItems() {
-    let [itemList, setItemList] = useState([]);
-    // let [itemName, setItemName] = useState('');
-    // let [itemQuantity, setItemQuantitiy] = useState(0);
-    // let [itemUnit, setItemUnit] = useState('');
-    // let [itemPurchased, setItemPurchased] = useState(true);
-
-    const getItems = () => {
-        axios  
-            .get('/groceries')
-            .then((response) => { // TODO test res
-                console.log(response.date);
-                setItemList(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
-
-    useEffect(() => {
-        getItems()
-    }, [])
+function GetItems({ list, toggleItem, removeItem }) {
 
     return (
         <div>
-            {itemList.map(item => (
-                <div key={item.name} className="item-container">
+            {list.map(item => (
+                <div key={item.id} className="item-container">
                     <div className="item-info">
                         <p>{item.name}</p>
                         <p>
                             {item.quantity} {item.unit}
                         </p>
+                        {item.purchased ? (
+                            <p>Bought</p>
+                        ) : (
+                            <button onClick={(e) => toggleItem(item.id)}>Buy</button>
+                        )}
+                        {/* <button onClick={() => toggleItem(item.id)}>{JSON.stringify(item.purchased)}</button> */}
+                        <button onClick={() => removeItem(item.id)}>Remove</button>
+                        
                     </div>
                 </div>
             ))}

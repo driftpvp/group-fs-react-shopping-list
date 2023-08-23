@@ -1,37 +1,32 @@
 import React, { useState } from "react";
-import Axios from "axios";
 
-function PostItems(){
+function PostItems({addItem}){
     const [name, setName] = useState("");
     const [quantity, setQuantity] = useState("");
     const [unit, setUnit] = useState("");
 
-    const addItem = e => {
-        e.preventDefault();
 
-        setName("")
-        setQuantity("")
-        setUnit("")
+const handleSubmit = (event) => {
+    event.preventDefault();
+ 
+    const newItem = {
+        name:name,
+        quantity:quantity,
+        unit:unit
+    }
 
-        Axios.post("/groceries", {
-            name,
-            quantity,
-            unit,
-        })
-        .then(response =>{
-        })
-        .catch(error =>{
-            console.log(error);
-        })
-    };
+    addItem(newItem);
+
+            // clear inputs
+            setName('')
+            setQuantity('')
+            setUnit('')
+}
 
     return (
         <div>
             <h1>Item Form</h1>
-
-            <form onSubmit={e => {
-                addItem(e);
-            }}>
+            <form onSubmit={handleSubmit}> 
             <input
             type="text"
             id="name"
